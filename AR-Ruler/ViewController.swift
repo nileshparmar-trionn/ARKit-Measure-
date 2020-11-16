@@ -26,15 +26,15 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         super.viewDidLoad()
         
         // Creates a background for the label
-        measurementLabel.frame = CGRect(x: 0, y: 0, width: view.frame.size.width, height: 100)
+        measurementLabel.frame = CGRect(x: 0, y: UIScreen.main.bounds.size.height-100, width: view.frame.size.width, height: 100)
         
         // Makes the background white
         measurementLabel.backgroundColor = .white
         
         // Sets some default text
-        measurementLabel.isHidden = true
-//        measurementLabel.text = "0 inches"
-//        measurementLabel.textColor = .red
+       // measurementLabel.isHidden = true
+        measurementLabel.text = "0 inches"
+        measurementLabel.textColor = .red
         
         // Centers the text
         measurementLabel.textAlignment = .center

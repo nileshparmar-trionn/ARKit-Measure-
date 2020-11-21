@@ -21,10 +21,22 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     // Measurement label
     var measurementLabel = UILabel()
     
+    
+    fileprivate lazy var session = ARSession()
+    fileprivate lazy var sessionConfiguration = ARWorldTrackingConfiguration()
+    fileprivate lazy var isMeasuring = false;
+    fileprivate lazy var vectorZero = SCNVector3()
+    fileprivate lazy var startValue = SCNVector3()
+    fileprivate lazy var endValue = SCNVector3()
+    fileprivate lazy var lines: [Line] = []
+    fileprivate var currentLine: Line?
+    fileprivate lazy var unit: DistanceUnit = .centimeter
+    
     // MARK: - Methods
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        setupScene()
         // Creates a background for the label
         measurementLabel.frame = CGRect(x: 0, y: UIScreen.main.bounds.size.height-100, width: view.frame.size.width, height: 100)
         
@@ -58,8 +70,19 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         sceneView.addGestureRecognizer(tapRecognizer)
     }
     
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        
+       
+    }
+    
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        
+    }
+    
     // Called when tap is detected
     @objc func handleTap(sender: UITapGestureRecognizer) {
+        
+        
         
         // Gets the location of the tap and assigns it to a constant
         let location = sender.location(in: sceneView)
@@ -82,36 +105,58 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         // Checks if there is at least one sphere in the array
         if let first = spheres.first {
             
+            
+            
             // Adds a second sphere to the array
             spheres.append(sphere)
             measurementLabel.text = "\(sphere.distance(to: first)) inches"
             
             // If more that two are present...
-            if spheres.count > 2 {
+            if spheres.count > 2
+            {
                 
-                // Iterate through spheres array
-                for sphere in spheres {
-                    
-                    // Remove all spheres
+                for sphere in spheres
+                {
                     sphere.removeFromParentNode()
                 }
                 
                 // Remove extraneous spheres
                 spheres = [spheres[2]]
             }
+            
+            if spheres.count == 2
+            {
+                //remove line
+                isMeasuring = false
+                if let line = currentLine
+                {
+                    lines.append(line)
+                    currentLine = nil
+                }
+            }
         
         // If there are no spheres...
-        } else {
+        }
+        else
+        {
+            
             // Add the sphere
             spheres.append(sphere)
+
+            resetValues()
+            isMeasuring = true
+            
         }
         
         // Iterate through spheres array
         for sphere in spheres {
             
+            
             // Add all spheres in the array
             self.sceneView.scene.rootNode.addChildNode(sphere)
         }
+        
+        
     }
     
     // Creates measuring endpoints
@@ -161,6 +206,54 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     }
 }
 
+extension ViewController {
+    func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
+        DispatchQueue.main.async { [weak self] in
+            self?.detectObjects()
+        }
+    }
+    
+    func session(_ session: ARSession, didFailWithError error: Error) {
+        //messageLabel.text = "Error occurred"
+    }
+    
+    func sessionWasInterrupted(_ session: ARSession) {
+       // messageLabel.text = "Interrupted"
+    }
+    
+    func sessionInterruptionEnded(_ session: ARSession) {
+       // messageLabel.text = "Interruption ended"
+    }
+}
+
+// MARK: - Users Interactions
+
+extension ViewController {
+    @IBAction func meterButtonTapped(button: UIButton) {
+        let alertVC = UIAlertController(title: "Settings", message: "Please select distance unit options", preferredStyle: .actionSheet)
+        alertVC.addAction(UIAlertAction(title: DistanceUnit.centimeter.title, style: .default) { [weak self] _ in
+            self?.unit = .centimeter
+        })
+        alertVC.addAction(UIAlertAction(title: DistanceUnit.inch.title, style: .default) { [weak self] _ in
+            self?.unit = .inch
+        })
+        alertVC.addAction(UIAlertAction(title: DistanceUnit.meter.title, style: .default) { [weak self] _ in
+            self?.unit = .meter
+        })
+        alertVC.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        present(alertVC, animated: true, completion: nil)
+    }
+    
+    @IBAction func resetButtonTapped(button: UIButton) {
+       // resetButton.isHidden = true
+       // resetImageView.isHidden = true
+        for line in lines {
+            line.removeFromParentNode()
+        }
+        lines.removeAll()
+    }
+}
+
 // MARK: - Extensions
 extension SCNNode {
     
@@ -186,7 +279,38 @@ extension SCNNode {
         return CGFloat(meters * inches)
     }
 }
-
-
-
-
+extension ViewController {
+    fileprivate func setupScene() {
+        //targetImageView.isHidden = true
+        sceneView.delegate = self
+        sceneView.session = session
+        //resetImageView.isHidden = true
+        session.run(sessionConfiguration, options: [.resetTracking, .removeExistingAnchors])
+        resetValues()
+    }
+    
+    fileprivate func resetValues() {
+        isMeasuring = false
+        startValue = SCNVector3()
+        endValue =  SCNVector3()
+    }
+    
+    fileprivate func detectObjects() {
+        guard let worldPosition = sceneView.realWorldVector(screenPosition: view.center) else { return }
+       // targetImageView.isHidden = false
+       // meterImageView.isHidden = false
+        if lines.isEmpty {
+           // messageLabel.text = "Hold screen & move your phone…"
+        }
+        //loadingView.stopAnimating()
+        if isMeasuring {
+            if startValue == vectorZero {
+                startValue = worldPosition
+                currentLine = Line(sceneView: sceneView, startVector: startValue, unit: unit)
+            }
+            endValue = worldPosition
+            currentLine?.update(to: endValue)
+           // messageLabel.text = currentLine?.distance(to: endValue) ?? "Calculating…"
+        }
+    }
+}

@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0D35AFF825679B0A00EB83AA /* Line.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D35AFF725679B0A00EB83AA /* Line.swift */; };
+		0D35AFFD25679B2800EB83AA /* SCNVector3.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D35AFFC25679B2800EB83AA /* SCNVector3.swift */; };
+		0D35B00225679BFE00EB83AA /* ARSCNView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D35B00125679BFE00EB83AA /* ARSCNView.swift */; };
 		DA266D6F20006A2C000036AF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA266D6E20006A2C000036AF /* AppDelegate.swift */; };
 		DA266D7320006A2C000036AF /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA266D7220006A2C000036AF /* ViewController.swift */; };
 		DA266D7620006A2C000036AF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DA266D7420006A2C000036AF /* Main.storyboard */; };
@@ -34,6 +37,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0D35AFF725679B0A00EB83AA /* Line.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Line.swift; sourceTree = "<group>"; };
+		0D35AFFC25679B2800EB83AA /* SCNVector3.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SCNVector3.swift; sourceTree = "<group>"; };
+		0D35B00125679BFE00EB83AA /* ARSCNView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ARSCNView.swift; sourceTree = "<group>"; };
 		DA266D6B20006A2C000036AF /* AR-Ruler.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "AR-Ruler.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DA266D6E20006A2C000036AF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DA266D7220006A2C000036AF /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -97,6 +103,9 @@
 		DA266D6D20006A2C000036AF /* AR-Ruler */ = {
 			isa = PBXGroup;
 			children = (
+				0D35AFF725679B0A00EB83AA /* Line.swift */,
+				0D35AFFC25679B2800EB83AA /* SCNVector3.swift */,
+				0D35B00125679BFE00EB83AA /* ARSCNView.swift */,
 				DA266D6E20006A2C000036AF /* AppDelegate.swift */,
 				DA266D7220006A2C000036AF /* ViewController.swift */,
 				DA266D7420006A2C000036AF /* Main.storyboard */,
@@ -259,6 +268,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0D35AFF825679B0A00EB83AA /* Line.swift in Sources */,
+				0D35AFFD25679B2800EB83AA /* SCNVector3.swift in Sources */,
+				0D35B00225679BFE00EB83AA /* ARSCNView.swift in Sources */,
 				DA266D7320006A2C000036AF /* ViewController.swift in Sources */,
 				DA266D6F20006A2C000036AF /* AppDelegate.swift in Sources */,
 			);
